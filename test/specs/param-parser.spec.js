@@ -742,6 +742,27 @@ describe("ParamParser middleware", function () {
       }
     );
 
+    it("should parse an array of objects containing date values",
+      function (done) {
+        swagger(files.parsed.petStore, function(err, middleware) {
+          let express = helper.express(middleware.metadata(), middleware.parseRequest());
+
+          helper.supertest(express)
+            .post("/api/pets/multiple")
+            .send([{ Name: "Fido", Type: "cat", DOB: "2017-01-01" }])
+            .end(helper.checkSpyResults(done));
+
+          express.post("/api/pets/multiple", helper.spy(function(req, res, next) {
+            expect(req.body).to.be.an.instanceof(Array);
+          }));
+
+          express.use("/api/pets/multiple", helper.spy(function(err, req, res, next) {
+            assert(false, "The call should succeed");
+          }));
+        });
+      }
+    );
+
   });
 
 });

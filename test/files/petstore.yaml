@@ -242,6 +242,20 @@
             schema:
               $ref: "#/definitions/error"
 
+    /pets/multiple:
+      post:
+        description: Creates multiple new pets in the store
+        operationId: addPets
+        parameters:
+          - name: pets
+            in: body
+            description: The pets to be added to the store
+            required: true
+            schema:
+              type: array
+              items:
+                $ref: "#/definitions/pet"
+
     /pets/{PetName}:
       parameters:
         - $ref: "#/parameters/petName"
